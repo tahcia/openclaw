@@ -6,6 +6,12 @@
   "openclaw": {
     "extensions": [
       "./tahcia-openclaw.cjs"
-    ]
+    ],
+    "compat": {                                                                                                                         
+      "pluginApi": "2026.4.23"                                                                                                          
+    },                                                                                                                                  
+    "build": {                                                                                                                          
+      "openclawVersion": "2026.4.23"                                                                                                    
+    }           
   }
 }
