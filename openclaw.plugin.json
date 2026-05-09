@@ -1,0 +1,533 @@
+{
+  "id": "tahcia",
+  "name": "Tahcia",
+  "description": "MCP Server for browser automation — record, replay, and debug multi-tab Chrome workflows",
+  "version": "1.0.1",
+  "entry": "./tahcia-openclaw.cjs",
+  "contracts": {
+    "tools": [
+      {
+        "name": "init",
+        "description": "Initialize a Tahcia session. Opens Chrome and attaches to the Tahcia console extension. Returns a sessionId (session:password) used by all subsequent tools. The user must already be logged in to the Tahcia console.",
+        "inputSchema": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "apiKey": {
+              "type": "string",
+              "description": "Your Tahcia API key"
+            }
+          }
+        }
+      },
+      {
+        "name": "record",
+        "description": "Start recording a new browser workflow. Every interaction the user performs will be captured as script steps.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            }
+          }
+        }
+      },
+      {
+        "name": "pause",
+        "description": "Pause recording temporarily. Use this when you need to perform actions that should NOT be recorded (e.g. typing a password, solving a CAPTCHA). Supply a note — it will be surfaced at this point when the script runs later, so the agent knows why execution paused.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "note"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "note": {
+              "type": "string",
+              "description": "Reason for the pause, shown at runtime when the script hits this step"
+            }
+          }
+        }
+      },
+      {
+        "name": "resume",
+        "description": "Resume recording after a pause.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            }
+          }
+        }
+      },
+      {
+        "name": "note",
+        "description": "Attach descriptors to current recording session. Must be called before stop()",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "short_summary": {
+              "type": "string",
+              "description": "1-2 liners of about this script"
+            },
+            "long_summary": {
+              "type": "string",
+              "description": "summarize what this this script does and its purpose"
+            },
+            "note": {
+              "type": "string",
+              "description": "Tell future yourself how you need to call this script. From note on login, checking elements, etc. Note must be thorough so you don't get blind when reusing this script."
+            }
+          }
+        }
+      },
+      {
+        "name": "stop",
+        "description": "Stop recording and save the workflow as a script. Returns the script hash which can be used with run (e.g. pass '@me/<hash>' to run).",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            }
+          }
+        }
+      },
+      {
+        "name": "script_get",
+        "description": "Fetch the full JSON definition of a saved script. The JSON includes a 'code' array of steps and 'screenshots'. You can inspect or modify fill/type values, or turn them into vars like vars:{varName:'hi'}  'echo $varName' references. Use the hash or script name without the '@me/' prefix.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "apiKey": {
+              "type": "string",
+              "description": "Your Tahcia API key"
+            },
+            "script": {
+              "type": "string",
+              "description": "Script hash or name (without '@me/' prefix)"
+            }
+          }
+        }
+      },
+      {
+        "name": "script_update",
+        "description": "Save an updated JSON definition back to a script. Only 'code' and 'screenshots' fields are used — pass the full object returned by script_get with your changes applied. Do NOT refactor or restructure unnecessarily; only change values that need to change.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "script",
+            "json"
+          ],
+          "properties": {
+            "apiKey": {
+              "type": "string",
+              "description": "Your Tahcia API key"
+            },
+            "script": {
+              "type": "string",
+              "description": "Script hash or name (without '@me/' prefix)"
+            },
+            "json": {
+              "type": "object",
+              "description": "The full script JSON from script_get with your changes applied"
+            }
+          }
+        }
+      },
+      {
+        "name": "run",
+        "description": "Run a saved script. Pass the full script reference including the '@me/' prefix (e.g. '@me/abc123'). The script runs line by line; if it hits a pause step the note will be returned so you know what manual action is expected.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "script"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "script": {
+              "type": "string",
+              "description": "Script reference including prefix, e.g. '@me/abc123'"
+            }
+          }
+        }
+      },
+      {
+        "name": "continue",
+        "description": "Continue running the currenlt paused script",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            }
+          }
+        }
+      },
+      {
+        "name": "execute",
+        "description": "Send a raw Tahcia command and return all text output. Use this for one-off commands not covered by other tools.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "command"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "command": {
+              "type": "string",
+              "description": "The command to execute (e.g. /run @me/script)"
+            }
+          }
+        }
+      },
+      {
+        "name": "screenshot",
+        "description": "Capture a screenshot of the currently active Chrome tab. Returns a PNG image.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            }
+          }
+        }
+      },
+      {
+        "name": "elements",
+        "description": "Return a structured map of all interactive elements visible in the current Chrome tab (buttons, inputs, links, etc.) with their coordinates and XPath selectors.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            }
+          }
+        }
+      },
+      {
+        "name": "navigate",
+        "description": "Open a URL in a new Chrome tab and assign it an alias for later reference.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "url",
+            "tabName"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "url": {
+              "type": "string",
+              "description": "Website URL to open"
+            },
+            "tabName": {
+              "type": "string",
+              "description": "Short alias for this tab (used in subsequent commands)"
+            }
+          }
+        }
+      },
+      {
+        "name": "js_click_at",
+        "description": "Click an element in the active tab using normalised (0.0–1.0) coordinates relative to the viewport.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "x",
+            "y"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "x": {
+              "type": "number",
+              "description": "0.0–1.0 normalised X coordinate"
+            },
+            "y": {
+              "type": "number",
+              "description": "0.0–1.0 normalised Y coordinate"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_mouse_click",
+        "description": "Click Mouse Left Button",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "x",
+            "y"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "x": {
+              "type": "number",
+              "description": "Absolute X pixel coordinate in the browser window"
+            },
+            "y": {
+              "type": "number",
+              "description": "Absolute Y pixel coordinate in the browser window"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_click_and_type",
+        "description": "Click (mac) a position in the active tab then type text into it.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "x",
+            "y",
+            "text"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "x": {
+              "type": "number",
+              "description": "Absolute X pixel coordinate in the browser window"
+            },
+            "y": {
+              "type": "number",
+              "description": "Absolute Y pixel coordinate in the browser window"
+            },
+            "text": {
+              "type": "string",
+              "description": "Text to type into the element"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_key_enter",
+        "description": "Press the Enter key (mac).",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_mouse_move",
+        "description": "Move the desktop cursor (mac) to an absolute pixel position within the browser window.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "x",
+            "y"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "x": {
+              "type": "number",
+              "description": "Absolute X pixel coordinate in the browser window"
+            },
+            "y": {
+              "type": "number",
+              "description": "Absolute Y pixel coordinate in the browser window"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_mouse_drag",
+        "description": "Simulate a mouse drag  (down → move → up) between two absolute pixel positions. Useful for sliders, CAPTCHA challenges, and drag-and-drop interactions.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "x",
+            "y",
+            "ex",
+            "ey"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "x": {
+              "type": "number",
+              "description": "Start X pixel coordinate"
+            },
+            "y": {
+              "type": "number",
+              "description": "Start Y pixel coordinate"
+            },
+            "ex": {
+              "type": "number",
+              "description": "End X pixel coordinate"
+            },
+            "ey": {
+              "type": "number",
+              "description": "End Y pixel coordinate"
+            }
+          }
+        }
+      },
+      {
+        "name": "js_scroll",
+        "description": "Scroll a specific element (by XPath or CSS selector) to an absolute scroll offset.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "selector",
+            "offset_x",
+            "offset_y"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "selector": {
+              "type": "string",
+              "description": "XPath or CSS selector of the element to scroll"
+            },
+            "offset_x": {
+              "type": "number",
+              "description": "Target scrollLeft value in px"
+            },
+            "offset_y": {
+              "type": "number",
+              "description": "Target scrollTop value in px"
+            }
+          }
+        }
+      },
+      {
+        "name": "js_scroll_at",
+        "description": "Scroll the element at a given viewport coordinate to an absolute scroll offset. Use when you know the position but not the selector.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "x",
+            "y",
+            "offset_x",
+            "offset_y"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "x": {
+              "type": "number",
+              "description": "Absolute X pixel coordinate of the scrollable element"
+            },
+            "y": {
+              "type": "number",
+              "description": "Absolute Y pixel coordinate of the scrollable element"
+            },
+            "offset_x": {
+              "type": "number",
+              "description": "Target scrollLeft value in px"
+            },
+            "offset_y": {
+              "type": "number",
+              "description": "Target scrollTop value in px"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "permissions": [
+    "browser",
+    "network"
+  ],
+  "skills": [
+    "./skills/tahcia"
+  ],
+  "uiHints": {
+    "apiKey": {
+      "label": "Tahcia API Key",
+      "help": "Get your key at tahcia.com/console",
+      "sensitive": true,
+      "placeholder": "ab1c2.."
+    }
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "apiKey": {
+        "type": "string"
+      }
+    },
+    "required": []
+  }
+}

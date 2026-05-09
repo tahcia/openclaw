@@ -1,0 +1,11 @@
+{
+  "name": "tahcia",
+  "version": "1.0.1",
+  "description": "Tahcia browser execution client",
+  "type": "module",
+  "openclaw": {
+    "extensions": [
+      "./tahcia-openclaw.cjs"
+    ]
+  }
+}
