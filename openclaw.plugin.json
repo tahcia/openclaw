@@ -2,7 +2,7 @@
   "id": "tahcia",
   "name": "Tahcia",
   "description": "MCP Server for browser automation — record, replay, and debug multi-tab Chrome workflows",
-  "version": "1.0.1",
+  "version": "1.0.1.1",
   "entry": "./tahcia-openclaw.cjs",
   "contracts": {
     "tools": [
