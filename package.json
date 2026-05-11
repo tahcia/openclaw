@@ -1,17 +1,17 @@
 {
   "name": "tahcia",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Tahcia browser execution client",
   "type": "module",
   "openclaw": {
     "extensions": [
       "./tahcia-openclaw.cjs"
     ],
-    "compat": {                                                                                                                         
-      "pluginApi": "2026.5.7"                                                                                                          
-    },                                                                                                                                  
-    "build": {                                                                                                                          
-      "openclawVersion": "2026.5.7"                                                                                                    
-    }           
+    "compat": {
+      "pluginApi": "2026.5.7"
+    },
+    "build": {
+      "openclawVersion": "2026.5.7"
+    }
   }
 }
