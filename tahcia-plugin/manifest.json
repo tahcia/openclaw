@@ -2,12 +2,14 @@
 {
   "manifest_version": 3,
   "name": "Tahcia Console",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Connect browser tabs to Tahcia Console for remote control",
   "permissions": [
     "tabs",
     "storage",
     "scripting",
+    "background",
+    "unlimitedStorage",
     "clipboardRead",
     "clipboardWrite",
     "webNavigation",
