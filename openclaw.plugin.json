@@ -2,7 +2,7 @@
   "id": "tahcia",
   "name": "Tahcia",
   "description": "MCP Server for browser automation — record, replay, and debug multi-tab Chrome workflows",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "entry": "./tahcia-openclaw.cjs",
   "contracts": {
     "tools": [
@@ -359,6 +359,27 @@
         }
       },
       {
+        "name": "mac_key_shortcut",
+        "description": "Press keyboards to perform shortcut (mac).",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "keys"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "keys": {
+              "type": "string",
+              "description": "Space sparated keys in press order. eg. 'cmd shift ='"
+            }
+          }
+        }
+      },
+      {
         "name": "mac_key_enter",
         "description": "Press the Enter key (mac).",
         "inputSchema": {
@@ -432,6 +453,122 @@
             "ey": {
               "type": "number",
               "description": "End Y pixel coordinate"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_system_pixel",
+        "description": "Capture RGBA, Hex, and normalized color information of a single screen pixel location.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "x",
+            "y"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "x": {
+              "type": "number",
+              "description": "Target X pixel coordinate"
+            },
+            "y": {
+              "type": "number",
+              "description": "Target Y pixel coordinate"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_system_screenshot",
+        "description": "Capture current screen on Mac",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_system_ocr",
+        "description": "Perform screen-wide optical character recognition to extract all text blocks along with their screen pixel coordinates.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_system_windows",
+        "description": "Retrieve an array list of all currently open and visible window objects along with their corresponding application bundle identifiers and absolute screen dimension boundaries.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_system_focus",
+        "description": "Bring an already running desktop application window into foreground focus using its system bundle identifier string.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "bundle_id"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "bundle_id": {
+              "type": "string",
+              "description": "The system bundle name scheme (e.g., com.google.Chrome)"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_system_open",
+        "description": "Launch a non-running desktop application using its bundle identifier string.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "bundle_id"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "bundle_id": {
+              "type": "string",
+              "description": "The system bundle name scheme (e.g., com.apple.Terminal)"
             }
           }
         }

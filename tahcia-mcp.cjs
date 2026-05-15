@@ -43,13 +43,13 @@ var require_util = __commonJS({
         });
       };
       util2.objectKeys = typeof Object.keys === "function" ? (obj) => Object.keys(obj) : (object) => {
-        const keys = [];
+        const keys2 = [];
         for (const key in object) {
           if (Object.prototype.hasOwnProperty.call(object, key)) {
-            keys.push(key);
+            keys2.push(key);
           }
         }
-        return keys;
+        return keys2;
       };
       util2.find = (arr, checker) => {
         for (const item of arr) {
@@ -2378,8 +2378,8 @@ var require_types = __commonJS({
         if (this._cached !== null)
           return this._cached;
         const shape = this._def.shape();
-        const keys = util_js_1.util.objectKeys(shape);
-        this._cached = { shape, keys };
+        const keys2 = util_js_1.util.objectKeys(shape);
+        this._cached = { shape, keys: keys2 };
         return this._cached;
       }
       _parse(input) {
@@ -4208,9 +4208,9 @@ var require_core = __commonJS({
         inst._zod.traits.add(name);
         initializer(inst, def);
         const proto = _.prototype;
-        const keys = Object.keys(proto);
-        for (let i = 0; i < keys.length; i++) {
-          const k = keys[i];
+        const keys2 = Object.keys(proto);
+        for (let i = 0; i < keys2.length; i++) {
+          const k = keys2[i];
           if (!(k in inst)) {
             inst[k] = proto[k].bind(inst);
           }
@@ -4433,12 +4433,12 @@ var require_util2 = __commonJS({
       return path.reduce((acc, key) => acc?.[key], obj);
     }
     function promiseAllObject(promisesObj) {
-      const keys = Object.keys(promisesObj);
-      const promises = keys.map((key) => promisesObj[key]);
+      const keys2 = Object.keys(promisesObj);
+      const promises = keys2.map((key) => promisesObj[key]);
       return Promise.all(promises).then((results) => {
         const resolvedObj = {};
-        for (let i = 0; i < keys.length; i++) {
-          resolvedObj[keys[i]] = results[i];
+        for (let i = 0; i < keys2.length; i++) {
+          resolvedObj[keys2[i]] = results[i];
         }
         return resolvedObj;
       });
@@ -6793,8 +6793,8 @@ var require_schemas = __commonJS({
       }
     }
     function normalizeDef(def) {
-      const keys = Object.keys(def.shape);
-      for (const k of keys) {
+      const keys2 = Object.keys(def.shape);
+      for (const k of keys2) {
         if (!def.shape?.[k]?._zod?.traits?.has("$ZodType")) {
           throw new Error(`Invalid element at key "${k}": expected a Zod schema`);
         }
@@ -6802,9 +6802,9 @@ var require_schemas = __commonJS({
       const okeys = util.optionalKeys(def.shape);
       return {
         ...def,
-        keys,
-        keySet: new Set(keys),
-        numKeys: keys.length,
+        keys: keys2,
+        keySet: new Set(keys2),
+        numKeys: keys2.length,
         optionalKeys: new Set(okeys)
       };
     }
@@ -21497,11 +21497,11 @@ var require_schemas3 = __commonJS({
       inst._zod.processJSONSchema = (ctx, json2, params) => processors.enumProcessor(inst, ctx, json2, params);
       inst.enum = def.entries;
       inst.options = Object.values(def.entries);
-      const keys = new Set(Object.keys(def.entries));
+      const keys2 = new Set(Object.keys(def.entries));
       inst.extract = (values, params) => {
         const newEntries = {};
         for (const value of values) {
-          if (keys.has(value)) {
+          if (keys2.has(value)) {
             newEntries[value] = def.entries[value];
           } else
             throw new Error(`Key ${value} not found in enum`);
@@ -21516,7 +21516,7 @@ var require_schemas3 = __commonJS({
       inst.exclude = (values, params) => {
         const newEntries = { ...def.entries };
         for (const value of values) {
-          if (keys.has(value)) {
+          if (keys2.has(value)) {
             delete newEntries[value];
           } else
             throw new Error(`Key ${value} not found in enum`);
@@ -25234,7 +25234,7 @@ var require_map = __commonJS({
       if (refs.mapStrategy === "record") {
         return (0, record_js_1.parseRecordDef)(def, refs);
       }
-      const keys = (0, parseDef_js_1.parseDef)(def.keyType._def, {
+      const keys2 = (0, parseDef_js_1.parseDef)(def.keyType._def, {
         ...refs,
         currentPath: [...refs.currentPath, "items", "items", "0"]
       }) || (0, any_js_1.parseAnyDef)(refs);
@@ -25247,7 +25247,7 @@ var require_map = __commonJS({
         maxItems: 125,
         items: {
           type: "array",
-          items: [keys, values],
+          items: [keys2, values],
           minItems: 2,
           maxItems: 2
         }
@@ -29146,7 +29146,7 @@ var require_fast_deep_equal = __commonJS({
       if (a === b) return true;
       if (a && b && typeof a == "object" && typeof b == "object") {
         if (a.constructor !== b.constructor) return false;
-        var length, i, keys;
+        var length, i, keys2;
         if (Array.isArray(a)) {
           length = a.length;
           if (length != b.length) return false;
@@ -29157,13 +29157,13 @@ var require_fast_deep_equal = __commonJS({
         if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
         if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
         if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
-        keys = Object.keys(a);
-        length = keys.length;
+        keys2 = Object.keys(a);
+        length = keys2.length;
         if (length !== Object.keys(b).length) return false;
         for (i = length; i-- !== 0; )
-          if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
+          if (!Object.prototype.hasOwnProperty.call(b, keys2[i])) return false;
         for (i = length; i-- !== 0; ) {
-          var key = keys[i];
+          var key = keys2[i];
           if (!equal(a[key], b[key])) return false;
         }
         return true;
@@ -45031,6 +45031,7 @@ var require_index = __commonJS({
     var CryptoJS = require_crypto_js();
     var fs = require("fs");
     var os = require("os");
+    var VERSION2 = "1.0.6";
     function getTahciaKey() {
       const configPath = path.join(os.homedir(), ".tahcia", "config");
       try {
@@ -45058,7 +45059,7 @@ var require_index = __commonJS({
           get: async (script) => await (await fetch(`https://api.tahcia.com/scripts/@me/${script}`, {
             headers: {
               Authorization: `Bearer ${this.apiKey}`,
-              "Accept": "application/json"
+              Accept: "application/json"
             }
           })).json(),
           save: async (script, json) => await (await fetch(`https://api.tahcia.com/scripts/${script}`, {
@@ -45086,17 +45087,24 @@ var require_index = __commonJS({
           scroll: (selector, xOffset, yOffset) => this.send(`/scroll "${selector}" ${xOffset ?? ""} ${yOffset ?? ""}`.trim()),
           read: (selector, selector2) => this.send(`/read "${selector}" ${selector2 ? `"${selector2}"` : ""}`.trim()),
           attr: (selector, attribute) => this.send(`/attr "${selector}" ${attribute}`),
-          property: (selector, keys) => this.send(`/property "${selector}" ${keys}`),
+          property: (selector, keys2) => this.send(`/property "${selector}" ${keys2}`),
           fill: (selector, text) => this.send(`/fill "${selector}" "${text}"`),
           click: (selector) => this.send(`/click "${selector}"`),
           "click.el.at": (x, y) => this.send(`/click.el.at ${x} ${y}`),
           "hover.el.at": (x, y) => this.send(`/hover.el.at ${x} ${y}`),
           "fill.el.at": (x, y, text) => this.send(`/fill.el.at ${x} ${y} "${text}"`),
-          mousemove: (x, y, time) => this.send(`/mousemove ${x} ${y} ${time}`),
-          mousedrag: (x, y, ex, ey, time) => this.send(`/mousedrag ${x} ${y} ${ex} ${ey} ${time}`),
-          mouseclick: (x, y, hold) => this.send(`/mouseclick ${x} ${y} ${hold}`),
-          keytype: (text) => this.send(`/keytype ${text}`),
-          keyenter: () => this.send("/keyenter"),
+          "mac.mouse.move": (x, y, time) => this.send(`/mac.mouse.move ${x} ${y} ${time}`),
+          "mac.mouse.drag": (x, y, ex, ey, time) => this.send(`/mac.mouse.drag ${x} ${y} ${ex} ${ey} ${time}`),
+          "mac.mouse.click": (x, y, hold) => this.send(`/mac.mouse.drag ${x} ${y} ${hold}`),
+          "mac.key.type": (text) => this.send(`/mac.key.type ${text}`),
+          "mac.key.shortcut": (text) => this.send(`/mac.key.shortcut ${typeof keys == "string" ? keys : keys.join(" ")}`),
+          "mac.key.enter": () => this.send("/mac.key.enter"),
+          "mac.windows": () => this.send(`/mac.windows`),
+          "mac.ocr": () => this.send("/mac.ocr"),
+          "mac.screenshot": () => this.send("/mac.screenshot"),
+          "mac.pixel": (x, y) => this.send(`/mac.pixel ${x} ${y}`),
+          "mac.focus": (bundle_id) => this.send(`/mac.focus ${bundle_id}`),
+          "mac.open": (bundle_id) => this.send(`/mac.open ${bundle_id}`),
           copy: (selector, range, regex) => this.send(`/copy "${selector}" ${range ?? ""} ${regex ? `"${regex}"` : ""}`.trim()),
           paste: (selector, index, regex) => this.send(`/paste "${selector}" ${index ?? ""} ${regex ?? ""}`.trim()),
           hover: (selector) => this.send(`/hover "${selector}"`),
@@ -45138,7 +45146,6 @@ var require_index = __commonJS({
             const msg = JSON.parse(data.toString());
             if (msg.done) {
               this.emit("message", msg);
-              resolve();
               return;
             }
             if (msg.type === "data") this.emit("message", msg);
@@ -45154,9 +45161,13 @@ var require_index = __commonJS({
           });
         });
       }
-      send(text, client) {
+      send(text) {
         if (!this.ws || this.ws.readyState !== WebSocket.OPEN) throw new Error("Not connected");
-        this.ws.send(this.sessionId ? (this.client ? `${this.client}://` : "") + CryptoJS.AES.encrypt(text, this.sessionId).toString() : text);
+        this.ws.send(JSON.stringify({ text: this.sessionId ? (this.client ? `${this.client}://` : "") + CryptoJS.AES.encrypt(text, this.sessionId).toString() : text }));
+      }
+      returnToConsole(result) {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) throw new Error("Not connected");
+        this.ws.send(JSON.stringify({ result }));
       }
       macMouse(cmd) {
         if (!this.isMac) return;
@@ -45195,6 +45206,9 @@ var require_index = __commonJS({
             case "paste":
               execSync(`"${this.helper}" paste "${cmd.text}"`);
               break;
+            case "shortcut":
+              execSync(`"${this.helper}" shortcut ${cmd.keys.join(" ")}`);
+              break;
           }
           this.emit("message", { ...cmd, done: 1 });
         } catch (e) {
@@ -45203,13 +45217,42 @@ var require_index = __commonJS({
       macSystem(cmd) {
         if (!this.isMac) return;
         try {
+          let buffer = null, data = null;
           switch (cmd.action) {
+            case "windows":
+              buffer = execSync(`"${this.helper}" windows`);
+              data = JSON.parse(buffer.toString("utf8").trim());
+              this.returnToConsole(data);
+              return this.emit("message", { ...cmd, type: "json", data, done: 1 });
+            case "focus":
+              execSync(`"${this.helper}" focus ${cmd.bundle_id}`);
+              break;
+            case "open":
+              execSync(`"${this.helper}" open ${cmd.bundle_id}`);
+              break;
+            case "screenshot":
+              buffer = execSync(`"${this.helper}" screenshot`);
+              data = buffer.toString("utf8").trim();
+              this.returnToConsole(data);
+              return this.emit("message", { ...cmd, type: "data", data, done: 1 });
+            case "pixel":
+              buffer = execSync(`"${this.helper}" pixel ${cmd.x} ${cmd.y}`);
+              data = JSON.parse(buffer.toString("utf8").trim());
+              this.returnToConsole(data);
+              return this.emit("message", { ...cmd, type: "json", data, done: 1 });
+            case "ocr":
+              buffer = execSync(`"${this.helper}" ocr`);
+              data = JSON.parse(buffer.toString("utf8").trim());
+              this.returnToConsole(data);
+              return this.emit("message", { ...cmd, type: "json", data, done: 1 });
             case "chrome":
               startChrome(cmd.key).then(() => {
                 this.emit("message", { ...cmd, done: 1 });
               });
+              return;
               break;
           }
+          this.emit("message", { ...cmd, done: 1 });
         } catch (e) {
         }
       }
@@ -45217,7 +45260,7 @@ var require_index = __commonJS({
         if (!this.isMac || !this.apiKey) {
           return "Can't perform this action.";
         }
-        execSync(`"${this.helper}" chrome "https://dev.tahcia.com/console"`);
+        execSync(`"${this.helper}" chrome "https://www.tahcia.com/console"`);
         const nowInLA = (/* @__PURE__ */ new Date()).toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
         const start = new Date(nowInLA).getTime();
         while (Date.now() - start < 6e4) {
@@ -45473,6 +45516,18 @@ var require_index = __commonJS({
         }
       },
       {
+        name: "mac_key_shortcut",
+        description: "Press keyboards to perform shortcut (mac).",
+        inputSchema: {
+          type: "object",
+          required: ["sessionId", "keys"],
+          properties: {
+            sessionId: { type: "string", description: "The session:pass string returned by init" },
+            keys: { type: "string", description: "Space sparated keys in press order. eg. 'cmd shift ='" }
+          }
+        }
+      },
+      {
         name: "mac_key_enter",
         description: "Press the Enter key (mac).",
         inputSchema: {
@@ -45512,6 +45567,76 @@ var require_index = __commonJS({
         }
       },
       {
+        name: "mac_system_pixel",
+        description: "Capture RGBA, Hex, and normalized color information of a single screen pixel location.",
+        inputSchema: {
+          type: "object",
+          required: ["sessionId", "x", "y"],
+          properties: {
+            sessionId: { type: "string", description: "The session:pass string returned by init" },
+            x: { type: "number", description: "Target X pixel coordinate" },
+            y: { type: "number", description: "Target Y pixel coordinate" }
+          }
+        }
+      },
+      {
+        name: "mac_system_screenshot",
+        description: "Capture current screen on Mac",
+        inputSchema: {
+          type: "object",
+          required: ["sessionId"],
+          properties: {
+            sessionId: { type: "string", description: "The session:pass string returned by init" }
+          }
+        }
+      },
+      {
+        name: "mac_system_ocr",
+        description: "Perform screen-wide optical character recognition to extract all text blocks along with their screen pixel coordinates.",
+        inputSchema: {
+          type: "object",
+          required: ["sessionId"],
+          properties: {
+            sessionId: { type: "string", description: "The session:pass string returned by init" }
+          }
+        }
+      },
+      {
+        name: "mac_system_windows",
+        description: "Retrieve an array list of all currently open and visible window objects along with their corresponding application bundle identifiers and absolute screen dimension boundaries.",
+        inputSchema: {
+          type: "object",
+          required: ["sessionId"],
+          properties: {
+            sessionId: { type: "string", description: "The session:pass string returned by init" }
+          }
+        }
+      },
+      {
+        name: "mac_system_focus",
+        description: "Bring an already running desktop application window into foreground focus using its system bundle identifier string.",
+        inputSchema: {
+          type: "object",
+          required: ["sessionId", "bundle_id"],
+          properties: {
+            sessionId: { type: "string", description: "The session:pass string returned by init" },
+            bundle_id: { type: "string", description: "The system bundle name scheme (e.g., com.google.Chrome)" }
+          }
+        }
+      },
+      {
+        name: "mac_system_open",
+        description: "Launch a non-running desktop application using its bundle identifier string.",
+        inputSchema: {
+          type: "object",
+          required: ["sessionId", "bundle_id"],
+          properties: {
+            sessionId: { type: "string", description: "The session:pass string returned by init" },
+            bundle_id: { type: "string", description: "The system bundle name scheme (e.g., com.apple.Terminal)" }
+          }
+        }
+      },
+      {
         name: "js_scroll",
         description: "Scroll a specific element (by XPath or CSS selector) to an absolute scroll offset.",
         inputSchema: {
@@ -45541,7 +45666,7 @@ var require_index = __commonJS({
         }
       }
     ];
-    module2.exports = { Tahcia: Tahcia2, TOOLS: TOOLS2 };
+    module2.exports = { Tahcia: Tahcia2, TOOLS: TOOLS2, VERSION: VERSION2 };
   }
 });
 
@@ -45549,7 +45674,7 @@ var require_index = __commonJS({
 var { Server } = require_server2();
 var { StdioServerTransport } = require_stdio2();
 var { CallToolRequestSchema, ListToolsRequestSchema } = require_types2();
-var { Tahcia, TOOLS } = require_index();
+var { Tahcia, TOOLS, VERSION } = require_index();
 var TahciaSession = class {
   constructor(sessionId, config = {}) {
     this.client = new Tahcia(sessionId, { ...config, client_name: "mcp" });
@@ -45583,13 +45708,26 @@ var TahciaSession = class {
         if (msg.type === dataType) {
           clearTimeout(timer);
           payload = msg.data;
-          payload = payload.includes(",") ? payload.split(",")[1] : payload;
         }
         if (msg.done) resolve(payload);
       });
       client.send(command);
     });
   }
+  // macCommandForData(client, fn=null, dataType = "data", timeoutMs = 10000) {
+  //   return new Promise((resolve, reject) => {
+  //     const timer = setTimeout(() => reject(new Error(`Timeout waiting for ${dataType}`)), timeoutMs);
+  //     let payload = null;
+  //     client.on('message', (msg) => {
+  //       if (msg.type === dataType) {
+  //         clearTimeout(timer);
+  //         payload = msg.data;
+  //       }
+  //       if (msg.done) resolve(payload);
+  //     });
+  //     fn?.();
+  //   });
+  // }
   /** Send a command; resolve on first msg.done. */
   sendSimpleCommand(client, command) {
     return new Promise((resolve) => {
@@ -45679,9 +45817,10 @@ var handlers = {
     const base64Data = await session.run(
       (client) => session.sendCommandForData(client, "/screenshot")
     );
+    let payload = base64Data.includes(",") ? base64Data.split(",")[1] : base64Data;
     return {
       content: [
-        { type: "image", data: base64Data, mimeType: "image/png" },
+        { type: "image", data: payload, mimeType: "image/png" },
         { type: "text", text: "Screenshot captured from the remote session." }
       ]
     };
@@ -45749,6 +45888,11 @@ var handlers = {
     client.macKeyboard({ action: "enter" });
     return ok("enter pressed");
   },
+  async mac_key_shortcut({ sessionId, keys: keys2 }) {
+    const client = new Tahcia(sessionId);
+    client.macKeyboard({ action: "shortcut", keys: keys2.split(" ") });
+    return ok("shortcut pressed");
+  },
   async mac_mouse_move({ sessionId, x, y }) {
     const client = new Tahcia(sessionId);
     client.macMouse({ action: "move", duration: 500, x, y });
@@ -45763,6 +45907,54 @@ var handlers = {
     const client = new Tahcia(sessionId);
     client.macMouse({ action: "drag", duration: 500, x, y, ex, ey });
     return ok("dragged");
+  },
+  async mac_system_screenshot({ sessionId }) {
+    const session = new TahciaSession(sessionId);
+    const base64Data = await session.run(
+      (client) => session.sendCommandForData(client, "/mac.screenshot", "data")
+    );
+    let payload = base64Data.includes(",") ? base64Data.split(",")[1] : base64Data;
+    return {
+      content: [
+        { type: "image", data: payload, mimeType: "image/png" },
+        { type: "text", text: "Screenshot captured from the remote session." }
+      ]
+    };
+  },
+  async mac_system_pixel({ sessionId, x, y }) {
+    const session = new TahciaSession(sessionId);
+    const data = await session.run(
+      (client) => session.sendCommandForData(client, `/mac.pixel ${x} ${y}`, "json")
+    );
+    return ok(JSON.stringify({ status: "success", data }, null, 2));
+  },
+  async mac_system_ocr({ sessionId }) {
+    const session = new TahciaSession(sessionId);
+    const data = await session.run(
+      (client) => session.sendCommandForData(client, `/mac.ocr`, "json")
+    );
+    return ok(JSON.stringify({ status: "success", data }, null, 2));
+  },
+  async mac_system_windows({ sessionId }) {
+    const session = new TahciaSession(sessionId);
+    const data = await session.run(
+      (client) => session.sendCommandForData(client, `/mac.windows`, "json")
+    );
+    return ok(JSON.stringify({ status: "success", data }, null, 2));
+  },
+  async mac_system_focus({ sessionId, bundle_id }) {
+    const session = new TahciaSession(sessionId);
+    await session.run(
+      (client) => session.sendSimpleCommand(client, `/mac.focus ${bundle_id}`)
+    );
+    return ok(JSON.stringify({ status: "success" }, null, 2));
+  },
+  async mac_system_open({ sessionId, bundle_id }) {
+    const session = new TahciaSession(sessionId);
+    await session.run(
+      (client) => session.sendSimpleCommand(client, `/mac.open ${bundle_id}`)
+    );
+    return ok(JSON.stringify({ status: "success" }, null, 2));
   }
 };
 function ok(text) {
@@ -45773,7 +45965,7 @@ function errResult(error) {
 }
 if (require.main === module) {
   const server = new Server(
-    { name: "tahcia-server", version: "1.0.1" },
+    { name: "tahcia-server", version: VERSION },
     { capabilities: { tools: TOOLS } }
   );
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
@@ -45788,7 +45980,6 @@ if (require.main === module) {
     }
   });
   const transport = new StdioServerTransport();
-  process.stdin.on("end", () => process.exit(0));
   transport.onclose = () => process.exit(0);
   server.connect(transport);
 }
