@@ -45031,7 +45031,7 @@ var require_index = __commonJS({
     var CryptoJS = require_crypto_js();
     var fs = require("fs");
     var os = require("os");
-    var VERSION2 = "1.0.6";
+    var VERSION2 = "1.0.7";
     function getTahciaKey() {
       const configPath = path.join(os.homedir(), ".tahcia", "config");
       try {
@@ -45179,6 +45179,9 @@ var require_index = __commonJS({
           switch (cmd.action) {
             case "click":
               execSync(`"${this.helper}" click ${screenX} ${screenY} ${cmd.hold || 50}`);
+              break;
+            case "dblclick":
+              execSync(`"${this.helper}" dblclick ${screenX} ${screenY} ${cmd.hold || 50}`);
               break;
             case "move":
               execSync(`"${this.helper}" move ${screenX} ${screenY} ${cmd.duration || 0}`);
@@ -45491,6 +45494,19 @@ var require_index = __commonJS({
       {
         name: "mac_mouse_click",
         description: "Click Mouse Left Button",
+        inputSchema: {
+          type: "object",
+          required: ["sessionId", "x", "y"],
+          properties: {
+            sessionId: { type: "string", description: "The session:pass string returned by init" },
+            x: { type: "number", description: "Absolute X pixel coordinate in the browser window" },
+            y: { type: "number", description: "Absolute Y pixel coordinate in the browser window" }
+          }
+        }
+      },
+      {
+        name: "mac_mouse_dblclick",
+        description: "Double click Mouse Left Button",
         inputSchema: {
           type: "object",
           required: ["sessionId", "x", "y"],

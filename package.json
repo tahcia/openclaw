@@ -1,7 +1,7 @@
 {
   "name": "tahcia",
-  "version": "1.0.6",
-  "description": "Tahcia browser execution client",
+  "version": "1.0.7",
+  "description": "Tahcia Chrome & Mac execution client",
   "type": "module",
   "openclaw": {
     "extensions": [

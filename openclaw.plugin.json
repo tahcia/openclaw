@@ -2,7 +2,7 @@
   "id": "tahcia",
   "name": "Tahcia",
   "description": "MCP Server for browser automation — record, replay, and debug multi-tab Chrome workflows",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "entry": "./tahcia-openclaw.cjs",
   "contracts": {
     "tools": [
@@ -304,6 +304,32 @@
       {
         "name": "mac_mouse_click",
         "description": "Click Mouse Left Button",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "sessionId",
+            "x",
+            "y"
+          ],
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "The session:pass string returned by init"
+            },
+            "x": {
+              "type": "number",
+              "description": "Absolute X pixel coordinate in the browser window"
+            },
+            "y": {
+              "type": "number",
+              "description": "Absolute Y pixel coordinate in the browser window"
+            }
+          }
+        }
+      },
+      {
+        "name": "mac_mouse_dblclick",
+        "description": "Double click Mouse Left Button",
         "inputSchema": {
           "type": "object",
           "required": [
