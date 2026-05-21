@@ -1,6 +1,6 @@
-# OpenClaw
+# Tahcia OpenClaw
 
-OpenClaw is the open execution layer for Tahcia-based automation workflows.
+Tahcia clawhub package is the open execution layer for Tahcia-based automation workflows.
 
 Designed for:
 
@@ -23,3 +23,8 @@ Designed for:
 - [Tahcia CLI](https://github.com/tahcia/cli)
 - [Tahcia MCP](https://github.com/tahcia/mcp)
 - [Tahcia Homepage](https://www.tahcia.com)
+
+## Install
+
+```bash
+ openclaw plugins install clawhub:tahcia
